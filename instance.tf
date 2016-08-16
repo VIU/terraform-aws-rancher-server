@@ -42,6 +42,8 @@ resource "template_file" "user_data" {
         database_username = "${var.database_username}"
         database_password = "${var.database_password}"
 
+        # S3
+        s3_bucket_name = "${var.s3_bucket_name}"
     }
 
     lifecycle {

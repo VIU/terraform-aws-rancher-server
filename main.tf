@@ -78,6 +78,11 @@ variable "database_password" {
     description = "Database password."
 }
 
+# S3
+variable "s3_bucket_name" {
+    description = "S3 Bucket Name."
+}
+
 ##################
 ## Misc outputs ##
 ##################

@@ -1,7 +1,7 @@
 # S3 bucket to hold rancher server api credentials
 resource "aws_s3_bucket" "server_credentials_bucket" {
 
-    bucket = "${var.server_hostname}-credentials"
+    bucket = "${var.s3_bucket_name}"
     acl = "private"
     force_destroy = true
 
