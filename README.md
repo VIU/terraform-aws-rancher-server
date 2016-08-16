@@ -32,7 +32,7 @@ Include the following in your Terraform config:
         # Server config
         server_name      = "rancher-server"
         server_hostname  = "rancher-server.yourdomain.tld"
-        server_key       = "path/to/key.pub"
+        keypair_name       = "your_keypair_name"              # if needed, create an aws_key_pair.  See example below.
         server_subnet_id = "${element(split(",", module.vpc.vpc_public_subnet_ids), 0)}"
         server_version   = "v0.42.0"
 
@@ -57,6 +57,21 @@ Include the following in your Terraform config:
 - On initial bootstrap, the server will be unprotected.. the first thing you should do is configure access control!
 - The hostname should be routable to the server before creating hosts - the best way to do this is with Route53 and a terraform config (see example below).
 - The rancher database should already be created (Rancher will bootstrap the tables but wont create the DB, see example below).
+
+
+#### Example Keypair Import (Optional)
+
+    # Import the keypair
+    resource "aws_key_pair" "keypair" {
+
+        key_name   = "${var.server_name}-key"
+        public_key = "${file("${var.server_key}")}"
+
+        lifecycle {
+            create_before_destroy = true
+        }
+
+    }
 
 #### Example DNS config
 

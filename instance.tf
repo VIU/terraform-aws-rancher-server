@@ -2,18 +2,6 @@
 ## Rancher server instance ##
 #############################
 
-# Import the keypair
-resource "aws_key_pair" "keypair" {
-
-    key_name   = "${var.server_name}-key"
-    public_key = "${file("${var.server_key}")}"
-
-    lifecycle {
-        create_before_destroy = true
-    }
-
-}
-
 # User-data template
 resource "template_file" "user_data" {
 
@@ -68,7 +56,7 @@ resource "aws_instance" "rancher_server" {
     ]
 
     # SSH key
-    key_name = "${aws_key_pair.keypair.key_name}"
+    key_name = "${var.keypair_name}"
 
     # User-data
     # Installs docker, starts containers and performs initial server setup
@@ -102,8 +90,4 @@ output "server_public_ip" {
 
 output "server_hostname" {
     value = "${var.server_hostname}"
-}
-
-output "server_keyname" {
-    value = "${aws_key_pair.keypair.key_name}"
 }
