@@ -32,7 +32,7 @@ Include the following in your Terraform config:
         # Server config
         server_name      = "rancher-server"
         server_hostname  = "rancher-server.yourdomain.tld"
-        server_key       = "path/to/key.pub"
+        keypair_name       = "your_keypair_name"              # if needed, create an aws_key_pair.  See example below.
         server_subnet_id = "${element(split(",", module.vpc.vpc_public_subnet_ids), 0)}"
         server_version   = "v0.42.0"
 
