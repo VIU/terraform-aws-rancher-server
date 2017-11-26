@@ -3,7 +3,7 @@
 #############################
 
 # User-data template
-resource "template_file" "user_data" {
+data "template_file" "user_data" {
 
     template = "${file("${path.module}/files/userdata.template")}"
 
@@ -34,10 +34,6 @@ resource "template_file" "user_data" {
         s3_bucket_name = "${var.s3_bucket_name}"
     }
 
-    lifecycle {
-        create_before_destroy = true
-    }
-
 }
 
 # Create instance
@@ -60,10 +56,16 @@ resource "aws_instance" "rancher_server" {
 
     # User-data
     # Installs docker, starts containers and performs initial server setup
-    user_data = "${template_file.user_data.rendered}"
+    user_data = "${data.template_file.user_data.rendered}"
 
     # Instance profile - sets required permissions to access other aws resources
     iam_instance_profile = "${aws_iam_instance_profile.rancher_server_instance_profile.id}"
+
+    root_block_device {
+        volume_type = "${var.server_root_volume_type}"
+        volume_size = "${var.server_root_volume_size}"
+        delete_on_termination = "${var.server_root_volume_delete_on_terminate}"
+    }
 
     # Misc
     instance_type = "${var.server_instance_type}"
@@ -88,6 +90,3 @@ output "server_public_ip" {
     value = "${aws_instance.rancher_server.public_ip}"
 }
 
-output "server_hostname" {
-    value = "${var.server_hostname}"
-}
