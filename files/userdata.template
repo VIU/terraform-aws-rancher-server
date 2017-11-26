@@ -32,7 +32,7 @@ docker run -d --restart=always --name=rancher-server --expose 8080/tcp \
 
 # Wait for rancher server to start
 serverIp=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' rancher-server)
-serverUrl="http://$serverIp:8080/v1"
+serverUrl="http://$serverIp:8080/v3"
 echo "=> Rancher server URL: $serverUrl"
 up=""
 sleepTime=5
