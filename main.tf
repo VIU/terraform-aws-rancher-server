@@ -23,8 +23,8 @@ variable "server_name" {
 variable "server_hostname" {
     description = "Hostname of the Rancher server."
 }
-variable "server_key" {
-    description = "Public key file for the Rancher server instance."
+variable "keypair_name" {
+    description = "Keypair Name for the Rancher server instance."
 }
 variable "server_subnet_id" {
     description = "Public subnet id in which to place the rancher server instance."
@@ -85,6 +85,11 @@ variable "database_username" {
 }
 variable "database_password" {
     description = "Database password."
+}
+
+# S3
+variable "s3_bucket_name" {
+    description = "S3 Bucket Name."
 }
 
 ##################

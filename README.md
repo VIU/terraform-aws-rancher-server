@@ -44,6 +44,11 @@ Include the following in your Terraform config:
         database_username = "dbuser"
         database_password = "dbpass"
 
+        # S3 bucket
+        # Added to allow specifying your own S3 bucket name to get around errors like this:
+        # `Error creating S3 bucket: BucketAlreadyExists: The requested bucket name is not available.
+        #  The bucket namespace is shared by all users of the system. Please select a different name and try again.`
+        s3_bucket_name = "rancher-server.yourdomain.tld-credentials"
     }
 
 ### Notes
@@ -52,6 +57,21 @@ Include the following in your Terraform config:
 - On initial bootstrap, the server will be unprotected.. the first thing you should do is configure access control!
 - The hostname should be routable to the server before creating hosts - the best way to do this is with Route53 and a terraform config (see example below).
 - The rancher database should already be created (Rancher will bootstrap the tables but wont create the DB, see example below).
+
+
+#### Example Keypair Import (Optional)
+
+    # Import the keypair
+    resource "aws_key_pair" "keypair" {
+
+        key_name   = "${var.server_name}-key"
+        public_key = "${file("${var.server_key}")}"
+
+        lifecycle {
+            create_before_destroy = true
+        }
+
+    }
 
 #### Example DNS config
 
@@ -75,7 +95,7 @@ Include the following in your Terraform config:
 
     # Subnet groups
     resource "aws_db_subnet_group" "default" {
-        
+
         name = "main"
         description = "Database VPC private subnets"
         subnet_ids = [
@@ -90,7 +110,7 @@ Include the following in your Terraform config:
 
     # Security group
     resource "aws_security_group" "db" {
-        
+
         name = "Rancher-Database-SG"
         description = "Allow rancher server to access database server."
         vpc_id = "${module.vpc.vpc_id}"
